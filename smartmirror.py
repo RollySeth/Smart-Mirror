@@ -235,7 +235,7 @@ class Twitter(Frame):
     def __init__(self, parent, *args, **kwargs):
         Frame.__init__(self, parent, *args, **kwargs)
         self.config(bg='black')
-	self.title = 'Twitter' # 'News' is more internationally generic
+	self.title = 'Twitter' 
         self.twitterLabel = Label(self, text=self.title, font=('Helvetica', medium_text_size), fg="white", bg="black")
         self.twitterLabel.pack(side=TOP, anchor=W)
         self.twitterContainer = Frame(self, bg="black")
@@ -357,9 +357,12 @@ class FullscreenWindow:
         self.tk = Tk()
         self.tk.configure(background='black')
         self.topFrame = Frame(self.tk, background = 'black')
+      
         self.bottomFrame = Frame(self.tk, background = 'black')
         self.topFrame.pack(side = TOP, fill=BOTH, expand = YES)
         self.bottomFrame.pack(side = BOTTOM, fill=BOTH, expand = YES)
+        self.midFrame = Frame(self.tk, background='black')
+        self.midFrame.pack(side=LEFT)
         self.state = False
         self.tk.bind("<Return>", self.toggle_fullscreen)
         self.tk.bind("<Escape>", self.end_fullscreen)
@@ -374,9 +377,10 @@ class FullscreenWindow:
         self.garage = Garage(self.bottomFrame)
         self.garage.pack(side=RIGHT, anchor=S, padx=0, pady=0)
      #Twitter 
-
+        self.twitter = Twitter(self.midFrame)
+        self.twitter.pack(side=LEFT, anchor=S, padx=0, pady=0)
         # news
-        self.news = Twitter(self.bottomFrame)
+        self.news = News(self.bottomFrame)
         self.news.pack(side=LEFT, anchor=S, padx=0, pady=0)
         # calender - removing for now
         # self.calender = Calendar(self.bottomFrame)
