@@ -20,15 +20,15 @@ ui_locale = '' # e.g. 'fr_FR' fro French, '' as default
 time_format = 12 # 12 or 24
 date_format = "%b %d, %Y" # check python doc for strftime() for options
 news_country_code = 'us'
-weather_api_token = '<TOKEN>' # create account at https://darksky.net/dev/
+weather_api_token = '7e74f3a4d10966710095c4da4d9e352e' # create account at https://darksky.net/dev/
 weather_lang = 'en' # see https://darksky.net/dev/docs/forecast for full list of language parameters values
 weather_unit = 'us' # see https://darksky.net/dev/docs/forecast for full list of unit parameters values
 latitude = None # Set this if IP location lookup does not work for you (must be a string)
 longitude = None # Set this if IP location lookup does not work for you (must be a string)
-xlarge_text_size = 94
-large_text_size = 48
-medium_text_size = 28
-small_text_size = 18
+xlarge_text_size = 48
+large_text_size = 32
+medium_text_size = 24
+small_text_size = 12
 
 @contextmanager
 def setlocale(name): #thread proof function to work with locale
@@ -46,7 +46,7 @@ icon_lookup = {
     'wind': "assets/Wind.png",   #wind
     'cloudy': "assets/Cloud.png",  # cloudy day
     'partly-cloudy-day': "assets/PartlySunny.png",  # partly cloudy day
-    'rain': "assets/Rain.png",  # rain day
+    'rain': "assets/Rain.png",
     'snow': "assets/Snow.png",  # snow day
     'snow-thin': "assets/Snow.png",  # sleet day
     'fog': "assets/Haze.png",  # fog day
@@ -54,7 +54,7 @@ icon_lookup = {
     'partly-cloudy-night': "assets/PartlyMoon.png",  # scattered clouds night
     'thunderstorm': "assets/Storm.png",  # thunderstorm
     'tornado': "assests/Tornado.png",    # tornado
-    'hail': "assests/Hail.png"  # hail
+    'hail': "assests/Hail.png"  # hail 
 }
 
 
@@ -112,7 +112,8 @@ class Weather(Frame):
         self.degreeFrm.pack(side=TOP, anchor=W)
         self.temperatureLbl = Label(self.degreeFrm, font=('Helvetica', xlarge_text_size), fg="white", bg="black")
         self.temperatureLbl.pack(side=LEFT, anchor=N)
-        self.iconLbl = Label(self.degreeFrm, bg="black")
+    
+	self.iconLbl = Label(self.degreeFrm, bg="black")
         self.iconLbl.pack(side=LEFT, anchor=N, padx=20)
         self.currentlyLbl = Label(self, font=('Helvetica', medium_text_size), fg="white", bg="black")
         self.currentlyLbl.pack(side=TOP, anchor=W)
@@ -208,11 +209,32 @@ class Weather(Frame):
         return 1.8 * (kelvin_temp - 273) + 32
 
 
+class Garage(Frame):
+     def __init__(self, parent,event_name=""):
+        Frame.__init__(self, parent, bg='black')
+        
+	image = Image.open("assets/Garage.png")
+        image = image.resize((170,50), Image.ANTIALIAS)
+        # image = image.convert('RGB')
+        photo = ImageTk.PhotoImage(image)
+
+        self.iconLbl = Label(self, bg='black', image=photo)
+        self.iconLbl.image = photo
+        self.iconLbl.pack(side=BOTTOM, anchor=S)
+
+	# self.config(bg='black')
+        # self.title = 'Garage'
+        # self.iconLbl=Label(self,bg='black',image='ImageTk.PhotoImage(Image.open("assets/Garage.png"))'
+        # self.garage.pack(side="bottom",fill="both",expand="yes")
+	# self.iconLbl = Label(self, text=self.title, font=('Helvetica', medium_text_size), fg="white", bg="black")
+        # self.iconLbl.pack(side=TOP, anchor=W)
+        
+
 class News(Frame):
     def __init__(self, parent, *args, **kwargs):
         Frame.__init__(self, parent, *args, **kwargs)
         self.config(bg='black')
-        self.title = 'News' # 'News' is more internationally generic
+	self.title = 'News' # 'News' is more internationally generic
         self.newsLbl = Label(self, text=self.title, font=('Helvetica', medium_text_size), fg="white", bg="black")
         self.newsLbl.pack(side=TOP, anchor=W)
         self.headlinesContainer = Frame(self, bg="black")
@@ -253,9 +275,8 @@ class NewsHeadline(Frame):
         self.iconLbl = Label(self, bg='black', image=photo)
         self.iconLbl.image = photo
         self.iconLbl.pack(side=LEFT, anchor=N)
-
-        self.eventName = event_name
-        self.eventNameLbl = Label(self, text=self.eventName, font=('Helvetica', small_text_size), fg="white", bg="black")
+	self.eventName = event_name
+        self.eventNameLbl = Label(self, text=self.eventName, font=('Helvetica', small_text_size), fg="white", bg="black",wraplength=800,justify=LEFT)
         self.eventNameLbl.pack(side=LEFT, anchor=N)
 
 
@@ -304,13 +325,18 @@ class FullscreenWindow:
         self.tk.bind("<Escape>", self.end_fullscreen)
         # clock
         self.clock = Clock(self.topFrame)
-        self.clock.pack(side=RIGHT, anchor=N, padx=100, pady=60)
+        self.clock.pack(side=RIGHT, anchor=N, padx=0, pady=0)
         # weather
         self.weather = Weather(self.topFrame)
-        self.weather.pack(side=LEFT, anchor=N, padx=100, pady=60)
+        self.weather.pack(side=LEFT, anchor=N, padx=0, pady=0)
+
+	 # garage
+        self.garage = Garage(self.bottomFrame)
+        self.garage.pack(side=RIGHT, anchor=S, padx=0, pady=0)
+
         # news
         self.news = News(self.bottomFrame)
-        self.news.pack(side=LEFT, anchor=S, padx=100, pady=60)
+        self.news.pack(side=LEFT, anchor=S, padx=0, pady=0)
         # calender - removing for now
         # self.calender = Calendar(self.bottomFrame)
         # self.calender.pack(side = RIGHT, anchor=S, padx=100, pady=60)
