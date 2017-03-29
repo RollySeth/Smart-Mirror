@@ -10,6 +10,8 @@ import requests
 import json
 import traceback
 import feedparser
+import tweepy
+from credientials import *
 
 from PIL import Image, ImageTk
 from contextlib import contextmanager
@@ -228,7 +230,45 @@ class Garage(Frame):
         # self.garage.pack(side="bottom",fill="both",expand="yes")
 	# self.iconLbl = Label(self, text=self.title, font=('Helvetica', medium_text_size), fg="white", bg="black")
         # self.iconLbl.pack(side=TOP, anchor=W)
+
+class Twitter(Frame):
+    def __init__(self, parent, *args, **kwargs):
+        Frame.__init__(self, parent, *args, **kwargs)
+        self.config(bg='black')
+	self.title = 'Twitter' # 'News' is more internationally generic
+        self.twitterLabel = Label(self, text=self.title, font=('Helvetica', medium_text_size), fg="white", bg="black")
+        self.twitterLabel.pack(side=TOP, anchor=W)
+        self.twitterContainer = Frame(self, bg="black")
+        self.twitterContainer.pack(side=TOP)
+        self.get_twitter_goodness();
+
+    def get_twitter_goodness(self):
+        try:
+            for widget in self.twitterContainer.winfo_children():
+                widget.destroy()
+            auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+            auth.set_access_token(access_token, access_token_secret)
+            api = tweepy.API(auth)
+            tweets = api.user_timeline(screen_name = 'msftgarage', count = 5, include_rts = True)
+            for status in tweets[0:5]:
+                tweetItem = TweetContent(self.twitterContainer, status.text.encode('cp850', errors='replace'))
+                tweetItem.pack(side=TOP, anchor=W)
+            self.after(600000, self.get_twitter_goodness);
+
+        except Exception as e:
+            traceback.print_exc()
+            print "Error: %s. Cannot get news." % e
+                
+
+class TweetContent(Frame):
+    def __init__(self, parent, twitter_content=""):
+        Frame.__init__(self, parent, bg='black')
+
         
+	self.twitterContent = twitter_content
+        self.twitterNameLbl = Label(self, text=self.twitterContent, font=('Helvetica', small_text_size), fg="white", bg="black",wraplength=800,justify=LEFT)
+        self.twitterNameLbl.pack(side=LEFT, anchor=N)
+
 
 class News(Frame):
     def __init__(self, parent, *args, **kwargs):
@@ -333,9 +373,10 @@ class FullscreenWindow:
 	 # garage
         self.garage = Garage(self.bottomFrame)
         self.garage.pack(side=RIGHT, anchor=S, padx=0, pady=0)
+     #Twitter 
 
         # news
-        self.news = News(self.bottomFrame)
+        self.news = Twitter(self.bottomFrame)
         self.news.pack(side=LEFT, anchor=S, padx=0, pady=0)
         # calender - removing for now
         # self.calender = Calendar(self.bottomFrame)
