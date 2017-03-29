@@ -230,7 +230,7 @@ class Garage(Frame):
         # self.garage.pack(side="bottom",fill="both",expand="yes")
 	# self.iconLbl = Label(self, text=self.title, font=('Helvetica', medium_text_size), fg="white", bg="black")
         # self.iconLbl.pack(side=TOP, anchor=W)
-
+# TO DO : NEEDS TO BE formatted
 class Twitter(Frame):
     def __init__(self, parent, *args, **kwargs):
         Frame.__init__(self, parent, *args, **kwargs)
