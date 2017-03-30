@@ -251,6 +251,7 @@ class Twitter(Frame):
             api = tweepy.API(auth)
             tweets = api.user_timeline(screen_name = 'msftgarage', count = 5, include_rts = True)
             for status in tweets[0:5]:
+                #Need to encode the tweet because of the unicode characters
                 tweetItem = TweetContent(self.twitterContainer, status.text.encode('cp850', errors='replace'))
                 tweetItem.pack(side=TOP, anchor=W)
             self.after(600000, self.get_twitter_goodness);
