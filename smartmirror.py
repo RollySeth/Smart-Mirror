@@ -11,6 +11,7 @@ import json
 import traceback
 import feedparser
 import tweepy
+import httplib, urllib, base64
 from credentials import *
 
 from PIL import Image, ImageTk
@@ -224,6 +225,25 @@ class Garage(Frame):
         self.iconLbl.image = photo
         self.iconLbl.pack(side=BOTTOM, anchor=S)
 
+class CognitiveServices():
+    def __init((self,parent)):
+        self.things="one"
+    def getFace(self):
+        headers = {'Content-Type': 'application/json','Ocp-Apim-Subscription-Key': faceKey}
+        params = urllib.urlencode({'returnFaceId': 'true','returnFaceLandmarks': 'false'})
+        data = {'url':'https://upload.wikimedia.org/wikipedia/commons/5/5b/Trump_signing_order_January_27.jpg'}
+
+        try:
+            conn = httplib.HTTPSConnection('westus.api.cognitive.microsoft.com')
+            conn.request("POST", "/face/v1.0/detect?%s" % params, str(data), headers)
+            response = conn.getresponse()
+            data = response.read()
+            print(data)
+            conn.close()
+        except Exception as e:
+            print(e)
+
+
 # TO DO : NEEDS TO BE formatted
 class Twitter(Frame):
     def __init__(self, parent, *args, **kwargs):
@@ -395,6 +415,10 @@ class FullscreenWindow:
         # calender - removing for now
         # self.calender = Calendar(self.bottomFrame)
         # self.calender.pack(side = RIGHT, anchor=S, padx=100, pady=60)
+
+
+        self.cogServices = CognitiveServices()
+        self.cogServices.getFace();
 
     def toggle_fullscreen(self, event=None):
         self.state = not self.state  # Just toggling the boolean
