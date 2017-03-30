@@ -11,7 +11,7 @@ import json
 import traceback
 import feedparser
 import tweepy
-from credientials import *
+from credentials import *
 
 from PIL import Image, ImageTk
 from contextlib import contextmanager
@@ -224,18 +224,12 @@ class Garage(Frame):
         self.iconLbl.image = photo
         self.iconLbl.pack(side=BOTTOM, anchor=S)
 
-	# self.config(bg='black')
-        # self.title = 'Garage'
-        # self.iconLbl=Label(self,bg='black',image='ImageTk.PhotoImage(Image.open("assets/Garage.png"))'
-        # self.garage.pack(side="bottom",fill="both",expand="yes")
-	# self.iconLbl = Label(self, text=self.title, font=('Helvetica', medium_text_size), fg="white", bg="black")
-        # self.iconLbl.pack(side=TOP, anchor=W)
 # TO DO : NEEDS TO BE formatted
 class Twitter(Frame):
     def __init__(self, parent, *args, **kwargs):
         Frame.__init__(self, parent, *args, **kwargs)
         self.config(bg='black')
-	self.title = 'Twitter' 
+	self.title = 'Microsoft Garage News' 
         self.twitterLabel = Label(self, text=self.title, font=('Helvetica', medium_text_size), fg="white", bg="black")
         self.twitterLabel.pack(side=TOP, anchor=W)
         self.twitterContainer = Frame(self, bg="black")
@@ -264,8 +258,22 @@ class TweetContent(Frame):
     def __init__(self, parent, twitter_content=""):
         Frame.__init__(self, parent, bg='black')
 
+
+
+        #Twitter Icon
+        image = Image.open("assets/twitterIcon.png")
+        image = image.resize((25, 25), Image.ANTIALIAS)
+       # image = image.convert('RGB')
+        photo = ImageTk.PhotoImage(image)
+
+        self.iconLbl = Label(self, bg='black', image=photo)
+        self.iconLbl.image = photo
+        self.iconLbl.pack(side=LEFT, anchor=N)
+
         
 	self.twitterContent = twitter_content
+	#self.twitterContent=" ".join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z t])|(\+:\/\/\S+)","",twitter_content).split())
+        self.twitterContent=" ".join(re.sub("(RT)","",twitter_content).split())
         self.twitterNameLbl = Label(self, text=self.twitterContent, font=('Helvetica', small_text_size), fg="white", bg="black",wraplength=800,justify=LEFT)
         self.twitterNameLbl.pack(side=LEFT, anchor=N)
 
@@ -373,15 +381,16 @@ class FullscreenWindow:
         self.weather = Weather(self.topFrame)
         self.weather.pack(side=LEFT, anchor=N, padx=0, pady=0)
 
-	 # garage
+	 # Garage Logo
         self.garage = Garage(self.bottomFrame)
         self.garage.pack(side=RIGHT, anchor=S, padx=0, pady=0)
-     #Twitter 
-        self.twitter = Twitter(self.midFrame)
+
+        # Twitter 
+        self.twitter = Twitter(self.bottomFrame)
         self.twitter.pack(side=LEFT, anchor=S, padx=0, pady=0)
         # news
-        self.news = News(self.bottomFrame)
-        self.news.pack(side=LEFT, anchor=S, padx=0, pady=0)
+        # self.news = News(self.bottomFrame)
+        # self.news.pack(side=LEFT, anchor=S, padx=0, pady=0)
         # calender - removing for now
         # self.calender = Calendar(self.bottomFrame)
         # self.calender.pack(side = RIGHT, anchor=S, padx=100, pady=60)
